@@ -1,5 +1,5 @@
-import { renderCalculatorHead } from "./components.js";
+import { renderCalculator } from "./components.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-    document.body.append(renderCalculatorHead())
+	document.body.append(renderCalculator());
 });
