@@ -8,3 +8,14 @@
 	--color-grey-200: hsl(0, 0%, 86%);
 	--color-grey-500: hsl(0, 1%, 44%);
 }
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type="number"] {
+	-moz-appearance: textfield;
+	appearance: textfield;
+}

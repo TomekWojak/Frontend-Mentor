@@ -140,11 +140,29 @@ const calculateAge = () => {
 	const day = Number(dayInput.value);
 	const month = Number(monthInput.value);
 	const year = Number(yearInput.value);
+
+	const birthDate = new Date(year, month - 1, day);
 	const currDate = new Date();
 
-	const years = Math.abs(currDate.getFullYear() - year);
-	const months = Math.abs(currDate.getMonth() - month);
-	const days = Math.abs(currDate.getDate() - day);
+	let years = currDate.getFullYear() - birthDate.getFullYear();
+	let months = currDate.getMonth() - birthDate.getMonth();
+	let days = currDate.getDate() - birthDate.getDate();
+
+	if (months < 0) {
+		years--;
+		months += 12;
+	}
+
+	if (days < 0) {
+		months--;
+		const lastMonth = new Date(currDate.getFullYear(), currDate.getMonth(), 0);
+		days += lastMonth.getDate();
+
+		if (months < 0) {
+			years--;
+			months += 12;
+		}
+	}
 
 	allDashes?.forEach((dash) => dash.remove());
 
@@ -205,4 +223,13 @@ document.addEventListener("DOMContentLoaded", function () {
 	document
 		.querySelector<HTMLButtonElement>(".calculate")
 		?.addEventListener("click", handleInputs);
+	document
+		.querySelectorAll<HTMLInputElement>('input[type="number"]')
+		.forEach((input) =>
+			input.addEventListener("keydown", (e) => {
+				if (e.key === "Enter") {
+					handleInputs();
+				}
+			})
+		);
 });
