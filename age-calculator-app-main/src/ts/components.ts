@@ -13,7 +13,7 @@ const renderCalculatorHead = () => {
 	calculatorHead.innerHTML = `
     <div class="w-full md:w-[22%] group"><span class="font-bold text-sm tracking-[0.2rem] text-grey-500 group-[.error]:text-red-400">DAY</span>
     <input type="number" placeholder="DD" class="py-3 px-4 rounded-lg font-bold uppercase text-black text-lg md:text-[1.3rem] placeholder:text-grey-500 w-full border border-[hsla(0,1%,44%,50%)] focus:border-purple-500 focus:outline-0 group-[.error]:border-red-400 caret-purple-500 cursor-pointer hover:border-purple-500 transition-colors">
-    <span class="error-txt hidden italic text-red-400 font-medium text-xs md:text-sm"></span></div>
+    <span class="error-txt error-txt-main hidden italic text-red-400 font-medium text-xs md:text-sm"></span></div>
 
     <div class="w-full md:w-[22%] group"><span class="font-bold text-sm tracking-[0.2rem] text-grey-500 group-[.error]:text-red-400">MONTH</span>
     <input type="number" placeholder="MM" class="py-3 px-4 rounded-lg font-bold uppercase text-black text-lg md:text-[1.3rem] placeholder:text-grey-500 w-full border border-[hsla(0,1%,44%,50%)] focus:border-purple-500 focus:outline-0 group-[.error]:border-red-400 caret-purple-500 cursor-pointer hover:border-purple-500 transition-colors">

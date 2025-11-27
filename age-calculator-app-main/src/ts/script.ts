@@ -11,7 +11,8 @@ const showErrorTxt = (
 	txt: HTMLElement,
 	season: string,
 	isEmpty: boolean,
-	value: string
+	value: string,
+	isShorter: boolean
 ) => {
 	txt.classList.remove("hidden");
 	if (isEmpty) {
@@ -24,6 +25,10 @@ const showErrorTxt = (
 		return;
 	}
 
+	if (isShorter) {
+		txt.textContent = "Must be a valid date";
+		return;
+	}
 	txt.textContent = `Must be a valid ${season}`;
 };
 const hideErrorTxt = (txt: HTMLElement) => {
@@ -40,7 +45,7 @@ const handleInputs = () => {
 		return;
 	}
 
-	inputs.forEach((input) => {
+	inputs.forEach((input, index, inputs) => {
 		const dayRegExp = /^(0[1-9]|[1-9]|[12][0-9]|3[01])$/;
 		const monthRegExp = /^(0?[1-9]|1[0-2])$/;
 		const yearRegExp = /^(19[0-9]{2}|20[0-1][0-9]|202[0-5])$/;
@@ -50,8 +55,10 @@ const handleInputs = () => {
 		const errorTxt = input.nextElementSibling;
 		const season =
 			input.previousElementSibling?.textContent.toLowerCase() ?? "";
+
 		let isEmpty = false;
 		let isValid = false;
+		let isShorter = false;
 
 		if (!parent) return;
 		if (!(errorTxt instanceof HTMLElement)) return;
@@ -60,7 +67,7 @@ const handleInputs = () => {
 
 		if (value === "") {
 			isEmpty = true;
-			showErrorTxt(errorTxt, season, isEmpty, value);
+			showErrorTxt(errorTxt, season, isEmpty, value, false);
 			return;
 		}
 		switch (season) {
@@ -69,6 +76,16 @@ const handleInputs = () => {
 				break;
 			case "month":
 				isValid = monthRegExp.test(value);
+				isShorter = checkIfShorter(value, [...inputs]);
+				const mainErrorTxt =
+					document.querySelector<HTMLElement>(".error-txt-main");
+
+				if (!mainErrorTxt) return;
+
+				if (isShorter && isValid) {
+					showErrorTxt(mainErrorTxt, season, isEmpty, value, isShorter);
+				}
+
 				break;
 			case "year":
 				isValid = yearRegExp.test(value);
@@ -76,12 +93,42 @@ const handleInputs = () => {
 		}
 
 		if (!isValid) {
-			showErrorTxt(errorTxt, season, isEmpty, value);
+			showErrorTxt(errorTxt, season, isEmpty, value, false);
 			return;
 		}
 		removeErrorState(parent);
 		hideErrorTxt(errorTxt);
 	});
+};
+
+const checkIfShorter = (month: string, inputs: HTMLInputElement[]) => {
+	const dayInputValue = inputs.find(
+		(input) => input.placeholder === "DD"
+	)?.value;
+	const allBoxes = document.querySelectorAll(".group");
+	let maxDate = 30;
+
+	if (!dayInputValue) return false;
+
+	if (
+		(month === "4" ||
+			month === "04" ||
+			month === "6" ||
+			month === "06" ||
+			month === "9" ||
+			month === "09" ||
+			month === "11") &&
+		parseInt(dayInputValue) > maxDate
+	) {
+		allBoxes.forEach((box) => box.classList.add("error"));
+		return true;
+	}
+
+	return false;
+};
+
+const checkIfLeapYear = (year: number) => {
+	return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
 };
 
 document.addEventListener("DOMContentLoaded", function () {
