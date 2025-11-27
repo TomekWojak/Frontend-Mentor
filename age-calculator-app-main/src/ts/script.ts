@@ -99,6 +99,58 @@ const handleInputs = () => {
 		removeErrorState(parent);
 		hideErrorTxt(errorTxt);
 	});
+	checkForErrors();
+};
+const checkForErrors = () => {
+	const boxes = [...document.querySelectorAll<HTMLElement>(".group")];
+
+	if (boxes.length === 0) return;
+	const errorBoxes = boxes.filter((box) => box.classList.contains("error"));
+
+	if (errorBoxes.length !== 0) return;
+
+	calculateAge();
+};
+
+const calculateAge = () => {
+	const allDashes = document.querySelectorAll(".dash");
+	const infoDay = document.querySelector(".info-day");
+	const infoMonth = document.querySelector(".info-month");
+	const infoYear = document.querySelector(".info-year");
+
+	const dayInput = document.querySelector<HTMLInputElement>(
+		'input[placeholder="DD"]'
+	);
+	const monthInput = document.querySelector<HTMLInputElement>(
+		'input[placeholder="MM"]'
+	);
+	const yearInput = document.querySelector<HTMLInputElement>(
+		'input[placeholder="YYYY"]'
+	);
+	if (
+		!dayInput ||
+		!monthInput ||
+		!yearInput ||
+		!infoDay ||
+		!infoMonth ||
+		!infoYear
+	)
+		return;
+
+	const day = Number(dayInput.value);
+	const month = Number(monthInput.value);
+	const year = Number(yearInput.value);
+	const currDate = new Date();
+
+	const years = Math.abs(currDate.getFullYear() - year);
+	const months = Math.abs(currDate.getMonth() - month);
+	const days = Math.abs(currDate.getDate() - day);
+
+	allDashes?.forEach((dash) => dash.remove());
+
+	infoDay.textContent = `${days}`;
+	infoMonth.textContent = `${months}`;
+	infoYear.textContent = `${years}`;
 };
 
 const checkIfShorter = (month: string, inputs: HTMLInputElement[]) => {
