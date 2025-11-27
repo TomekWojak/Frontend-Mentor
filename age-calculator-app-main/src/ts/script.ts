@@ -105,11 +105,25 @@ const checkIfShorter = (month: string, inputs: HTMLInputElement[]) => {
 	const dayInputValue = inputs.find(
 		(input) => input.placeholder === "DD"
 	)?.value;
+	const yearInputValue = inputs.find(
+		(input) => input.placeholder === "YYYY"
+	)?.value;
+
+	if (!dayInputValue || !yearInputValue) return false;
+
 	const allBoxes = document.querySelectorAll(".group");
 	let maxDate = 30;
+	let isLeap = checkIfLeapYear(yearInputValue);
 
-	if (!dayInputValue) return false;
+	let daysOfFeb = isLeap ? 29 : 28;
 
+	if (
+		(month === "2" || month === "02") &&
+		parseInt(dayInputValue) > daysOfFeb
+	) {
+		allBoxes.forEach((box) => box.classList.add("error"));
+		return true;
+	}
 	if (
 		(month === "4" ||
 			month === "04" ||
@@ -127,8 +141,11 @@ const checkIfShorter = (month: string, inputs: HTMLInputElement[]) => {
 	return false;
 };
 
-const checkIfLeapYear = (year: number) => {
-	return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
+const checkIfLeapYear = (year: string) => {
+	const parsedYear = parseInt(year);
+	return (
+		(parsedYear % 4 == 0 && parsedYear % 100 != 0) || parsedYear % 400 == 0
+	);
 };
 
 document.addEventListener("DOMContentLoaded", function () {
