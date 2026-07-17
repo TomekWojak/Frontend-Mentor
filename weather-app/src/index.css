@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+:root {
+	--neutral: hsl(0, 0%, 100%);
+	--lighterGray: hsl(250, 6%, 84%);
+	--lightGray: hsl(240, 6%, 70%);
+	--darkGray: hsl(243, 23%, 30%);
+	--darkerGray: hsl(243, 23%, 24%);
+	--veryDarkGray: hsl(243, 27%, 20%);
+	--theDarkest: hsl(243, 96%, 9%);
+	--orange: hsl(28, 100%, 52%);
+	--lightBlue: hsl(233, 67%, 56%);
+	--darkBlue: hsl(248, 70%, 36%);
+}
+* {
+	font-family: "DM Sans";
+}
+.wrapper {
+	margin-inline: auto;
+	width: min(100%, 1200px);
+	padding-inline: 1em;
+}

@@ -1,0 +1,16 @@
+{
+	"name": "node-test",
+	"version": "1.0.0",
+	"description": "",
+	"main": "script.js",
+	"type": "module",
+	"scripts": {
+		"start": "node script.js"
+	},
+	"keywords": [],
+	"author": "Tomasz Wojak",
+	"license": "ISC",
+	"dependencies": {
+		"@inquirer/prompts": "^8.5.2"
+	}
+}
