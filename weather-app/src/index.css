@@ -11,9 +11,12 @@
 	--orange: hsl(28, 100%, 52%);
 	--lightBlue: hsl(233, 67%, 56%);
 	--darkBlue: hsl(248, 70%, 36%);
+
+	--font-dmSans: "DM Sans", sans-serif;
+	--font-grotesque: "Bricolage Grotesque", sans-serif;
 }
-* {
-	font-family: "DM Sans";
+body {
+	font-family: var(--font-dmSans);
 }
 .wrapper {
 	margin-inline: auto;
