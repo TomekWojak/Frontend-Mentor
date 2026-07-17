@@ -12,5 +12,6 @@ CLI tool for quickly creating React/Vite projects with my preferred setup.
 
 ## Usage
 
-npm install
-npm run start
+```npm install```
+<br>
+```npm run start```
