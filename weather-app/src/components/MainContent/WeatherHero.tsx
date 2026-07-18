@@ -1,14 +1,14 @@
 import heroSmall from "../../assets/bg-today-small.svg";
 import heroLarge from "../../assets/bg-today-large.svg";
-import iconSunny from "../../assets/icon-sunny.webp";
 
 type heroData = {
 	city: string | null;
 	country: string | null;
 	temperature: number;
+	iconRef: string;
 };
 
-function WeatherHero({ city, country, temperature }: heroData) {
+function WeatherHero({ city, country, temperature, iconRef }: heroData) {
 	const todayDate = new Date();
 	const formattedDate = todayDate.toLocaleDateString("en-US", {
 		weekday: "long",
@@ -40,7 +40,7 @@ function WeatherHero({ city, country, temperature }: heroData) {
 					<span className="text-(--neutral)/80 text-sm">{formattedDate}</span>
 				</div>
 				<div className="flex items-center justify-center gap-4">
-					<img width={100} src={iconSunny} alt="" />
+					<img width={100} src={iconRef} alt="" />
 					<span className="text-[4.5rem] font-bold">{temperature}°</span>
 				</div>
 			</div>

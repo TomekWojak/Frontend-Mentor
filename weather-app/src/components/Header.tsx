@@ -1,10 +1,55 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import searchIcon from "/src/assets/icon-search.svg";
 import loadingIcon from "/src/assets/icon-loading.svg";
 
+type City = {
+	id: number;
+	name: string;
+};
+
 function Header() {
 	const [isSearching, setIsSearching] = useState(false);
-	const [citiesLoading, setCitiesLoading] = useState(true);
+	const [citiesLoading, setCitiesLoading] = useState(false);
+	const [cities, setCities] = useState<City[]>([]);
+	const [value, setValue] = useState("");
+	const searchResultsRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		const handleClickOutsideResults = (e: MouseEvent) => {
+			if (
+				searchResultsRef.current &&
+				!searchResultsRef.current.contains(e.target as Node)
+			) {
+				setIsSearching(false);
+			}
+		};
+		document.addEventListener("click", handleClickOutsideResults);
+		return () => {
+			document.removeEventListener("click", handleClickOutsideResults);
+		};
+	}, []);
+
+	const searchByCityName = async () => {
+		if (value === "") return;
+
+		try {
+			setIsSearching(true);
+			setCitiesLoading(true);
+			const response = await fetch(
+				`https://geocoding-api.open-meteo.com/v1/search?name=${value}&count=3&language=en&format=json`,
+			);
+			const data = await response.json();
+
+			if (data) {
+				setCities(data.results ?? []);
+				console.log(data.results);
+			}
+		} catch (err) {
+			throw new Error("Cannot fetch cities data");
+		} finally {
+			setCitiesLoading(false);
+		}
+	};
 
 	const SearchingArea = () => {
 		return (
@@ -19,23 +64,24 @@ function Header() {
 						<span>Search in progress</span>
 					</div>
 				) : (
-					<div className="searching-results absolute gap-2 items-start p-2 w-full -bottom-2 translate-y-full rounded-lg bg-(--veryDarkGray) flex flex-col z-10">
-						{/* tutaj będę iterował po tablicy znalezionych miast */}
-						<button className="p-1.5 w-full cursor-pointer border border-transparent hover:border-(--lighterGray)/20 transition-[background-color,border] duration-300 rounded-md hover:bg-(--darkerGray) text-left focus-visible:outline-0 focus-visible:border-(--neutral)">
-							City Name
-						</button>
-						<button className="p-1.5 w-full cursor-pointer border border-transparent hover:border-(--lighterGray)/20 transition-[background-color,border] duration-300 rounded-md hover:bg-(--darkerGray) text-left focus-visible:outline-0 focus-visible:border-(--neutral)">
-							City Name
-						</button>
-						<button className="p-1.5 w-full cursor-pointer border border-transparent hover:border-(--lighterGray)/20 transition-[background-color,border] duration-300 rounded-md hover:bg-(--darkerGray) text-left focus-visible:outline-0 focus-visible:border-(--neutral)">
-							City Name
-						</button>
-						<button className="p-1.5 w-full cursor-pointer border border-transparent hover:border-(--lighterGray)/20 transition-[background-color,border] duration-300 rounded-md hover:bg-(--darkerGray) text-left focus-visible:outline-0 focus-visible:border-(--neutral)">
-							City Name
-						</button>
-						<button className="p-1.5 w-full cursor-pointer border border-transparent hover:border-(--lighterGray)/20 transition-[background-color,border] duration-300 rounded-md hover:bg-(--darkerGray) text-left focus-visible:outline-0 focus-visible:border-(--neutral)">
-							City Name
-						</button>
+					<div
+						ref={searchResultsRef}
+						className="searching-results absolute gap-2 items-start p-2 w-full -bottom-2 translate-y-full rounded-lg bg-(--veryDarkGray) flex flex-col z-100">
+						{cities.length !== 0 ? (
+							cities.map(({ name, id, latitude, longitude }) => (
+								<button
+									key={id}
+									data-lat={latitude}
+									data-long={longitude}
+									className="p-1.5 w-full cursor-pointer border border-transparent hover:border-(--lighterGray)/20 transition-[background-color,border] duration-300 rounded-md hover:bg-(--darkerGray) text-left focus-visible:outline-0 focus-visible:border-(--neutral)">
+									{name}
+								</button>
+							))
+						) : (
+							<p className="self-center">
+								No search results, correct the spelling
+							</p>
+						)}
 					</div>
 				)}
 			</>
@@ -50,6 +96,8 @@ function Header() {
 			<div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
 				<div className="relative text-(--neutral) sm:flex-1 sm:max-w-130">
 					<input
+						value={value}
+						onChange={(e) => setValue(e.currentTarget.value)}
 						type="text"
 						placeholder="Search for a place"
 						className="bg-(--veryDarkGray) rounded-lg py-2.5 sm:py-3 pl-12 pr-4 w-full border border-transparent focus-visible:outline-none focus-visible:border-(--neutral) transition-[background-color] duration-300 hover:bg-(--darkerGray) placeholder:text-(--neutral)/75"
@@ -62,7 +110,9 @@ function Header() {
 					/>
 					{isSearching && <SearchingArea />}
 				</div>
-				<button className="rounded-lg py-2.5 sm:py-3 px-4 text-(--neutral) bg-(--lightBlue) hover:bg-(--darkBlue) cursor-pointer transition-[background-color] duration-300 focus-visible:outline-(--lightBlue) outline-offset-2 outline-0 focus-visible:outline-2">
+				<button
+					onClick={searchByCityName}
+					className="rounded-lg py-2.5 sm:py-3 px-4 text-(--neutral) bg-(--lightBlue) hover:bg-(--darkBlue) cursor-pointer transition-[background-color] duration-300 focus-visible:outline-(--lightBlue) outline-offset-2 outline-0 focus-visible:outline-2">
 					Search
 				</button>
 			</div>
