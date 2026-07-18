@@ -48,7 +48,7 @@ function Header() {
 				How's the sky looking today?
 			</h1>
 			<div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-				<div className="relative text-(--neutral) sm:flex-1 max-w-130">
+				<div className="relative text-(--neutral) sm:flex-1 sm:max-w-130">
 					<input
 						type="text"
 						placeholder="Search for a place"

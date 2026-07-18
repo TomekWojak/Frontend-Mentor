@@ -1,6 +1,8 @@
 import Header from "../Header.tsx";
 import WeatherHero from "../MainContent/WeatherHero.tsx";
 import WeatherHeroStats from "../MainContent/WeatherHeroStats.tsx";
+import SkeletonLoading from "../MainContent/SkeletonLoading.tsx";
+
 import { fetchWeatherApi } from "openmeteo";
 import { useEffect, useState } from "react";
 
@@ -133,26 +135,29 @@ function MainContent() {
 	return (
 		<>
 			<Header />
+			<SkeletonLoading />
+			{/* {weatherData && (
+				<main>
+					<section className="wrapper">
+						<div>
+							<WeatherHero
+								city={location && location.city}
+								country={location && location.country}
+								temperature={Math.round(
+									weatherData.current.apparent_temperature,
+								)}
+							/>
 
-			<section className="wrapper">
-				<div>
-					{weatherData && (
-						<WeatherHero
-							city={location && location.city}
-							country={location && location.country}
-							temperature={Math.round(weatherData.current.apparent_temperature)}
-						/>
-					)}
-					{weatherData && (
-						<WeatherHeroStats
-							precipitation={Math.round(weatherData.current.precipitation)}
-							humidity={Math.round(weatherData.current.relative_humidity_2m)}
-							temperature={Math.round(weatherData.current.temperature_2m)}
-							wind={Math.round(weatherData.current.wind_speed_10m)}
-						/>
-					)}
-				</div>
-			</section>
+							<WeatherHeroStats
+								precipitation={Math.round(weatherData.current.precipitation)}
+								humidity={Math.round(weatherData.current.relative_humidity_2m)}
+								temperature={Math.round(weatherData.current.temperature_2m)}
+								wind={Math.round(weatherData.current.wind_speed_10m)}
+							/>
+						</div>
+					</section>
+				</main>
+			)} */}
 		</>
 	);
 }
