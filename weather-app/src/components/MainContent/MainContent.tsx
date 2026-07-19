@@ -3,50 +3,15 @@ import WeatherHero from "../MainContent/WeatherHero.tsx";
 import WeatherHeroStats from "../MainContent/WeatherHeroStats.tsx";
 import SkeletonLoading from "../MainContent/SkeletonLoading.tsx";
 import DailyForecast from "../MainContent/DailyForecast.tsx";
+import HourlyForecast from "../MainContent/HourlyForecast.tsx";
 import { getWeatherIcon } from "../MainContent/MappedIcon.tsx";
 import { fetchWeatherApi } from "openmeteo";
 import { useEffect, useState } from "react";
-
-type CurrentWeather = {
-	time: Date;
-	temperature_2m: number;
-	relative_humidity_2m: number;
-	apparent_temperature: number;
-	precipitation: number;
-	rain: number;
-	showers: number;
-	snowfall: number;
-	cloud_cover: number;
-	wind_speed_10m: number;
-	weather_code: number;
-};
-type HourlyWeather = {
-	time: Date[];
-	temperature_2m: Float32Array | null;
-	relative_humidity_2m: Float32Array | null;
-};
-
-type DailyWeather = {
-	time: Date[];
-	temperature_2m_max: Float32Array | null;
-	temperature_2m_min: Float32Array | null;
-	weather_code: Float32Array | null;
-};
-
-type WeatherData = {
-	current: CurrentWeather;
-	hourly: HourlyWeather;
-	daily: DailyWeather;
-};
-type LocationData = {
-	city: string;
-	country: string;
-};
+import type { WeatherData, LocationData } from "../../types/weather.ts";
 
 function MainContent() {
 	const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
 	const [location, setLocation] = useState<LocationData | null>(null);
 
 	useEffect(() => {
@@ -65,7 +30,7 @@ function MainContent() {
 					latitude,
 					longitude,
 					daily: ["temperature_2m_max", "temperature_2m_min", "weather_code"],
-					hourly: ["temperature_2m", "relative_humidity_2m"],
+					hourly: ["temperature_2m", "weather_code"],
 					current: [
 						"temperature_2m",
 						"relative_humidity_2m",
@@ -88,7 +53,7 @@ function MainContent() {
 				const hourly = response.hourly()!;
 				const daily = response.daily()!;
 
-				const weatherData = {
+				const weatherData: WeatherData = {
 					current: {
 						time: new Date((Number(current.time()) + utcOffsetSeconds) * 1000),
 						temperature_2m: current.variables(0)!.value(),
@@ -117,8 +82,8 @@ function MainContent() {
 										1000,
 								),
 						),
-						temperature_2m: hourly.variables(0)!.valuesArray(),
-						relative_humidity_2m: hourly.variables(1)!.valuesArray(),
+						temperature_2m: hourly.variables(0)!.valuesArray()!,
+						weather_code: hourly.variables(1)!.valuesArray()!,
 					},
 					daily: {
 						time: Array.from(
@@ -135,9 +100,13 @@ function MainContent() {
 										1000,
 								),
 						),
-						temperature_2m_max: daily.variables(0)!.valuesArray(),
-						temperature_2m_min: daily.variables(1)!.valuesArray(),
-						weather_code: daily.variables(2)!.valuesArray(),
+						temperature_2m_max: daily
+							.variables(0)!
+							.valuesArray() as Float32Array,
+						temperature_2m_min: daily
+							.variables(1)!
+							.valuesArray() as Float32Array,
+						weather_code: daily.variables(2)!.valuesArray() as Float32Array,
 					},
 				};
 				setWeatherData(weatherData);
@@ -161,13 +130,12 @@ function MainContent() {
 					};
 				}
 				const { city, country } = await getLocationName(latitude, longitude);
-				console.log(weatherData);
 				setLocation({
 					city,
 					country,
 				});
 			} catch (err) {
-				setError(err instanceof Error ? err.message : "Something went wrong");
+				throw new Error("Something went wrong");
 			} finally {
 				setIsLoading(false);
 			}
@@ -182,8 +150,8 @@ function MainContent() {
 			) : (
 				weatherData && (
 					<main>
-						<section className="wrapper">
-							<div>
+						<section className="wrapper grid md:grid-cols-3 md:gap-5">
+							<div className=" md:row-1 md:col-span-2">
 								<WeatherHero
 									city={location && location.city}
 									country={location && location.country}
@@ -201,10 +169,9 @@ function MainContent() {
 									temperature={Math.round(weatherData.current.temperature_2m)}
 									wind={Math.round(weatherData.current.wind_speed_10m)}
 								/>
+								<DailyForecast weather={weatherData} />
 							</div>
-						</section>
-						<section className="wrapper">
-							<DailyForecast weather={weatherData} />
+							<HourlyForecast weather={weatherData} />
 						</section>
 					</main>
 				)

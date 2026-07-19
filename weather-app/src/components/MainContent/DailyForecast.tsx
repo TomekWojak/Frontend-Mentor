@@ -1,11 +1,10 @@
 import { getWeatherIcon } from "../MainContent/MappedIcon.tsx";
+import type { DailyForecastProps } from "../../types/weather.ts";
 
-function DailyForecast({
-	weather: {
-		daily: { time, temperature_2m_min, temperature_2m_max, weather_code },
-	},
-}) {
-	console.log(weather_code);
+function DailyForecast({ weather }: DailyForecastProps) {
+	const { time, temperature_2m_min, temperature_2m_max, weather_code } =
+		weather.daily;
+
 	return (
 		<div className="daily-forecast mt-7">
 			<p className="text-(--neutral) mb-4">Daily forecast</p>

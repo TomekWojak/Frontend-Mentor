@@ -5,6 +5,8 @@ import loadingIcon from "/src/assets/icon-loading.svg";
 type City = {
 	id: number;
 	name: string;
+	latitude: number;
+	longitude: number;
 };
 
 function Header() {
@@ -66,7 +68,7 @@ function Header() {
 				) : (
 					<div
 						ref={searchResultsRef}
-						className="searching-results absolute gap-2 items-start p-2 w-full -bottom-2 translate-y-full rounded-lg bg-(--veryDarkGray) flex flex-col z-100">
+						className="searching-results absolute gap-2 items-start p-2 w-full -bottom-2 translate-y-full rounded-lg bg-(--veryDarkGray) flex flex-col z-100 border border-(--lighterGray)/20">
 						{cities.length !== 0 ? (
 							cities.map(({ name, id, latitude, longitude }) => (
 								<button
