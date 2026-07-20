@@ -86,7 +86,7 @@ function Header({ onCitySelect }: HeaderProps) {
 							))
 						) : (
 							<p className="self-center">
-								No search results, correct the spelling
+								No search results, correct the phrase
 							</p>
 						)}
 					</div>

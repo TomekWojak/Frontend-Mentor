@@ -53,22 +53,22 @@ function HourlyForecast({ weather, temperatureUnit }: DailyForecastProps) {
 					<div ref={selectRef} className="select relative">
 						<button
 							onClick={() => setIsOpen(!isOpen)}
-							className="flex gap-2 bg-(--darkerGray) w-fit px-3 py-1 rounded-md hover:bg-(--lightGray)/20 transition-colors duration-300">
+							className="flex gap-2 bg-(--darkerGray) w-fit px-3 py-1 rounded-md hover:bg-(--lightGray)/20 transition-colors duration-300 border border-transparent focus-visible:outline-none focus-visible:border-(--neutral)">
 							{selectedWeekday} <img src={iconDropdown} alt="" />
 						</button>
 
 						{isOpen && (
-							<ul className="absolute min-w-45 -bottom-2 right-0 translate-y-full p-2 rounded-lg bg-(--darkerGray) border border-(--lighterGray)/20">
+							<div className="absolute min-w-45 -bottom-2 right-0 translate-y-full p-2 rounded-lg bg-(--darkerGray) border border-(--lighterGray)/20">
 								{weekDays.map((weekday) => (
-									<li
+									<button
 										onClick={() => handleOptionClick(weekday)}
 										role="option"
 										key={weekday}
-										className="p-2 hover:bg-(--lightGray)/20 transition-colors duration-300 rounded-lg cursor-default">
+										className="p-2 block w-full text-left hover:bg-(--lightGray)/20 transition-colors duration-300 rounded-lg cursor-default border border-transparent focus-visible:outline-none focus-visible:border-(--neutral)">
 										{weekday}
-									</li>
+									</button>
 								))}
-							</ul>
+							</div>
 						)}
 					</div>
 				</div>
