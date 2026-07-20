@@ -1,3 +1,4 @@
+import type { TemperatureUnit } from "../types/units.ts";
 export type CurrentWeather = {
 	time: Date;
 	temperature_2m: number;
@@ -37,4 +38,5 @@ export type LocationData = {
 
 export type DailyForecastProps = {
 	weather: WeatherData;
+	temperatureUnit: TemperatureUnit;
 };

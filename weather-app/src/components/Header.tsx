@@ -9,7 +9,11 @@ type City = {
 	longitude: number;
 };
 
-function Header() {
+type HeaderProps = {
+	onCitySelect: (latitude: number, longitude: number) => Promise<void>;
+};
+
+function Header({ onCitySelect }: HeaderProps) {
 	const [isSearching, setIsSearching] = useState(false);
 	const [citiesLoading, setCitiesLoading] = useState(false);
 	const [cities, setCities] = useState<City[]>([]);
@@ -44,7 +48,6 @@ function Header() {
 
 			if (data) {
 				setCities(data.results ?? []);
-				console.log(data.results);
 			}
 		} catch (err) {
 			throw new Error("Cannot fetch cities data");
@@ -73,8 +76,10 @@ function Header() {
 							cities.map(({ name, id, latitude, longitude }) => (
 								<button
 									key={id}
-									data-lat={latitude}
-									data-long={longitude}
+									onClick={() => {
+										onCitySelect(latitude, longitude);
+										setValue("");
+									}}
 									className="p-1.5 w-full cursor-pointer border border-transparent hover:border-(--lighterGray)/20 transition-[background-color,border] duration-300 rounded-md hover:bg-(--darkerGray) text-left focus-visible:outline-0 focus-visible:border-(--neutral)">
 									{name}
 								</button>
@@ -95,7 +100,9 @@ function Header() {
 			<h1 className="mb-8 text-(--neutral) text-center font-(family-name:--font-grotesque) font-semibold tracking-wide text-[2.5rem] md:text-[3rem]">
 				How's the sky looking today?
 			</h1>
-			<div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+			<form
+				onSubmit={(e) => e.preventDefault()}
+				className="flex flex-col gap-3 sm:flex-row sm:justify-center">
 				<div className="relative text-(--neutral) sm:flex-1 sm:max-w-130">
 					<input
 						value={value}
@@ -117,7 +124,7 @@ function Header() {
 					className="rounded-lg py-2.5 sm:py-3 px-4 text-(--neutral) bg-(--lightBlue) hover:bg-(--darkBlue) cursor-pointer transition-[background-color] duration-300 focus-visible:outline-(--lightBlue) outline-offset-2 outline-0 focus-visible:outline-2">
 					Search
 				</button>
-			</div>
+			</form>
 		</header>
 	);
 }

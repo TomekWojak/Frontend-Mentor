@@ -1,8 +1,18 @@
 import logo from "/src/assets/logo.svg";
 import settingsIcon from "/src/assets/icon-units.svg";
 import iconDropdown from "/src/assets/icon-dropdown.svg";
+import iconChecked from "/src/assets/icon-checkmark.svg";
 import { useEffect, useRef, useState } from "react";
-export default function Controls() {
+import type { ControlsProps } from "../types/units.ts";
+
+export default function Controls({
+	temperatureUnit,
+	windUnit,
+	precipitationUnit,
+	onTemperatureUnitChange,
+	onWindUnitChange,
+	onPrecipitationUnitChange,
+}: ControlsProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -21,6 +31,12 @@ export default function Controls() {
 		};
 	}, []);
 
+	const switchToImperialUnits = () => {
+		onTemperatureUnitChange("fahrenheit");
+		onWindUnitChange("mph");
+		onPrecipitationUnitChange("inch");
+	};
+
 	return (
 		<nav className="wrapper py-5">
 			<div
@@ -35,31 +51,75 @@ export default function Controls() {
 				</button>
 				{isOpen && (
 					<div className="dropdown min-w-50 flex flex-col gap-2 items-start p-2 absolute right-0 -bottom-2 translate-y-full rounded-lg bg-(--veryDarkGray) text-(--neutral) text-[0.95rem] border border-(--lighterGray)/20 z-100">
-						<button className="p-2 w-full text-left rounded-lg hover:bg-(--darkerGray) transition-colors duration-300 border border-transparent focus-visible:outline-none focus-visible:border-(--neutral)">
+						<button
+							onClick={switchToImperialUnits}
+							className="p-2 w-full text-left rounded-lg hover:bg-(--darkerGray) transition-colors duration-300 border border-transparent focus-visible:outline-none focus-visible:border-(--neutral)">
 							Switch to Imperial
 						</button>
 						<p className="px-2 text-(--lightGray)">Temperature</p>
-						<button className="p-2 w-full text-left rounded-lg hover:bg-(--darkerGray) transition-colors duration-300 border border-transparent focus-visible:outline-none focus-visible:border-(--neutral)">
+						<button
+							onClick={() => onTemperatureUnitChange("celsius")}
+							className={`${temperatureUnit === "celsius" ? "bg-(--darkerGray)" : ""} flex justify-between items-center p-2 w-full text-left rounded-lg hover:bg-(--darkerGray) transition-colors duration-300 border border-transparent focus-visible:outline-none focus-visible:border-(--neutral)`}>
 							Celsius (°C)
+							<img
+								className={`${temperatureUnit === "celsius" ? "block" : "hidden"}`}
+								src={iconChecked}
+								alt=""
+							/>
 						</button>
-						<button className="p-2 w-full text-left rounded-lg hover:bg-(--darkerGray) transition-colors duration-300 border border-transparent focus-visible:outline-none focus-visible:border-(--neutral)">
+						<button
+							onClick={() => onTemperatureUnitChange("fahrenheit")}
+							className={`${temperatureUnit === "fahrenheit" ? "bg-(--darkerGray)" : ""} flex justify-between items-center p-2 w-full text-left rounded-lg hover:bg-(--darkerGray) transition-colors duration-300 border border-transparent focus-visible:outline-none focus-visible:border-(--neutral)`}>
 							Fahrenheit (°F)
+							<img
+								className={`${temperatureUnit === "fahrenheit" ? "block" : "hidden"}`}
+								src={iconChecked}
+								alt=""
+							/>
 						</button>
 						<hr className="w-full border-(--lighterGray)/20" />
 						<p className="px-2 text-(--lightGray)">Wind Speed</p>
-						<button className="p-2 w-full text-left rounded-lg hover:bg-(--darkerGray) transition-colors duration-300 border border-transparent focus-visible:outline-none focus-visible:border-(--neutral)">
-							km/h
+						<button
+							onClick={() => onWindUnitChange("kmh")}
+							className={`${windUnit === "kmh" ? "bg-(--darkerGray)" : ""} flex justify-between items-center p-2 w-full text-left rounded-lg hover:bg-(--darkerGray) transition-colors duration-300 border border-transparent focus-visible:outline-none focus-visible:border-(--neutral)`}>
+							kmh
+							<img
+								className={`${windUnit === "kmh" ? "block" : "hidden"}`}
+								src={iconChecked}
+								alt=""
+							/>
 						</button>
-						<button className="p-2 w-full text-left rounded-lg hover:bg-(--darkerGray) transition-colors duration-300 border border-transparent focus-visible:outline-none focus-visible:border-(--neutral)">
+						<button
+							onClick={() => onWindUnitChange("mph")}
+							className={`${windUnit === "mph" ? "bg-(--darkerGray)" : ""} flex justify-between items-center p-2 w-full text-left rounded-lg hover:bg-(--darkerGray) transition-colors duration-300 border border-transparent focus-visible:outline-none focus-visible:border-(--neutral)`}>
 							mph
+							<img
+								className={`${windUnit === "mph" ? "block" : "hidden"}`}
+								src={iconChecked}
+								alt=""
+							/>
 						</button>
 						<hr className="w-full border-(--lighterGray)/20" />
 						<p className="px-2 text-(--lightGray)">Precipitation</p>
-						<button className="p-2 w-full text-left rounded-lg hover:bg-(--darkerGray) transition-colors duration-300 border border-transparent focus-visible:outline-none focus-visible:border-(--neutral)">
-							Millimeters (mm)
+						<button
+							onClick={() => onPrecipitationUnitChange("mm")}
+							className={`${precipitationUnit === "mm" ? "bg-(--darkerGray)" : ""} flex justify-between items-center p-2 w-full text-left rounded-lg hover:bg-(--darkerGray) transition-colors duration-300 border border-transparent focus-visible:outline-none focus-visible:border-(--neutral)`}>
+							Milimeters (mm)
+							<img
+								className={`${precipitationUnit === "mm" ? "block" : "hidden"}`}
+								src={iconChecked}
+								alt=""
+							/>
 						</button>
-						<button className="p-2 w-full text-left rounded-lg hover:bg-(--darkerGray) transition-colors duration-300 border border-transparent focus-visible:outline-none focus-visible:border-(--neutral)">
+						<button
+							onClick={() => onPrecipitationUnitChange("inch")}
+							className={`${precipitationUnit === "inch" ? "bg-(--darkerGray)" : ""} flex justify-between items-center p-2 w-full text-left rounded-lg hover:bg-(--darkerGray) transition-colors duration-300 border border-transparent focus-visible:outline-none focus-visible:border-(--neutral)`}>
 							Inches (in)
+							<img
+								className={`${precipitationUnit === "inch" ? "block" : "hidden"}`}
+								src={iconChecked}
+								alt=""
+							/>
 						</button>
 					</div>
 				)}

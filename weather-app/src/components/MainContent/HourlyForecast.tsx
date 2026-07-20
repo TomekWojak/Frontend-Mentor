@@ -3,7 +3,7 @@ import iconDropdown from "../../assets/icon-dropdown.svg";
 import { getWeatherIcon } from "../MainContent/MappedIcon.tsx";
 import type { DailyForecastProps } from "../../types/weather.ts";
 
-function HourlyForecast({ weather }: DailyForecastProps) {
+function HourlyForecast({ weather, temperatureUnit }: DailyForecastProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [selectedWeekday, setSelectedWeekday] = useState("Monday");
 	const selectRef = useRef<HTMLDivElement>(null);
@@ -16,7 +16,6 @@ function HourlyForecast({ weather }: DailyForecastProps) {
 		"Saturday",
 		"Sunday",
 	];
-	console.log(weather);
 	const { time, temperature_2m, weather_code } = weather.hourly;
 
 	useEffect(() => {
@@ -75,10 +74,7 @@ function HourlyForecast({ weather }: DailyForecastProps) {
 				</div>
 				<ul className="hourly-forecast-data flex flex-col gap-3">
 					{currentWeekdayData
-						.slice(
-							selectedWeekday === "Sunday" ? 13 : 15,
-							selectedWeekday === "Sunday" ? 21 : 23,
-						)
+						.slice(15, 23)
 						.map(({ time, temperature, weatherCode }, i) => {
 							return (
 								<li
@@ -93,7 +89,11 @@ function HourlyForecast({ weather }: DailyForecastProps) {
 										})}
 									</span>
 
-									<span className="ml-auto">{Math.round(temperature)}°</span>
+									<span className="ml-auto">
+										{temperatureUnit === "celsius"
+											? `${Math.round(temperature)}°`
+											: `${Math.round(temperature * 1.8 + 32)}°F`}
+									</span>
 								</li>
 							);
 						})}

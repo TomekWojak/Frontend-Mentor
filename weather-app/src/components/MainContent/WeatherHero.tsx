@@ -1,14 +1,22 @@
 import heroSmall from "../../assets/bg-today-small.svg";
 import heroLarge from "../../assets/bg-today-large.svg";
+import type { TemperatureUnit } from "../../types/units.ts";
 
 type heroData = {
+	temperatureUnit: TemperatureUnit;
 	city: string | null;
 	country: string | null;
 	temperature: number;
 	iconRef: string;
 };
 
-function WeatherHero({ city, country, temperature, iconRef }: heroData) {
+function WeatherHero({
+	temperatureUnit,
+	city,
+	country,
+	temperature,
+	iconRef,
+}: heroData) {
 	const todayDate = new Date();
 	const formattedDate = todayDate.toLocaleDateString("en-US", {
 		weekday: "long",
@@ -41,7 +49,11 @@ function WeatherHero({ city, country, temperature, iconRef }: heroData) {
 				</div>
 				<div className="flex items-center justify-center gap-4">
 					<img width={100} src={iconRef} alt="" />
-					<span className="text-[4.5rem] font-bold">{temperature}°</span>
+					<span className="text-[4.5rem] font-bold">
+						{temperatureUnit === "celsius"
+							? `${temperature}°`
+							: `${Math.round(temperature * 1.8 + 32)}°F`}
+					</span>
 				</div>
 			</div>
 		</div>

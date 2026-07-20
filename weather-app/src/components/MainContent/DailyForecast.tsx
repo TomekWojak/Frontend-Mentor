@@ -1,7 +1,7 @@
 import { getWeatherIcon } from "../MainContent/MappedIcon.tsx";
 import type { DailyForecastProps } from "../../types/weather.ts";
 
-function DailyForecast({ weather }: DailyForecastProps) {
+function DailyForecast({ weather, temperatureUnit }: DailyForecastProps) {
 	const { time, temperature_2m_min, temperature_2m_max, weather_code } =
 		weather.daily;
 
@@ -21,8 +21,18 @@ function DailyForecast({ weather }: DailyForecastProps) {
 							alt=""
 						/>
 						<div className="flex justify-between mt-auto">
-							<span>{Math.round(temperature_2m_max[i])}°</span>
-							<span>{Math.round(temperature_2m_min[i])}°</span>
+							<span>
+								{temperatureUnit === "celsius"
+									? Math.round(temperature_2m_max[i])
+									: Math.round(temperature_2m_max[i] * 1.8 + 32)}
+								°
+							</span>
+							<span>
+								{temperatureUnit === "celsius"
+									? Math.round(temperature_2m_min[i])
+									: Math.round(temperature_2m_min[i] * 1.8 + 32)}
+								°
+							</span>
 						</div>
 					</div>
 				))}
